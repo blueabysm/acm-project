@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+class BigFloat {
+public:
+    BigFloat () {
+        this->_numberString = NULL;
+        this->_length = 0;
+        this->_fractionDigits = 0;
+    }
+    
+    BigFloat (const char* numberString) {
+        this->_fractionDigits = 0;
+        this->_numberString = new char[this->_length = strlen (numberString)];
+        char* temp = this->_numberString;
+        
+        bool isFraction = false;
+        while (*numberString != '\0') {
+            if (*numberString == '.') {
+                isFraction = true;
+                numberString++;
+            }
+
+            if (isFraction) {
+                this->_fractionDigits++;
+            }
+
+            *temp = *numberString;
+            temp++;
+            numberString++;
+        }
+
+        *(++temp) = '\0';
+    }
+    
+    BigFloat (int length) {
+        
+    }
+
+    char* getNumber () {
+        return this->_numberString;
+    }
+    
+private:
+    char* _numberString;
+    int _length;
+    int _fractionDigits;
+};
+
+
+
+int main (int argc, char** argv) {
+    BigFloat f1 ("3.141592653");
+    BigFloat f2 ("3.142857");
+
+    if (true) {
+        ;
+    }
+    return 0;
+}

@@ -1,0 +1,28 @@
+#ifndef _BIG_INTEGER_H
+#define _BIG_INTEGER_H
+
+class BigFloat {
+ public:
+    BigFloat (const char* number) {
+        this->str
+    }
+    ~BigFloat () {}
+    BigFloat& operator + (left, right) {
+        
+    }
+
+    BigFloat& operator - (left, right) {
+
+    }
+
+    BigFloat& operator * (left, right) {
+
+    }
+
+    BigFloat* operator / (left, right) {
+
+    }
+ private:
+    char* str;
+};
+#endif
