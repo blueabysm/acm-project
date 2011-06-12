@@ -58,58 +58,68 @@ public:
     friend istream& operator >> (istream& is, BigFloat& bigFloat);
     
 private:
-    void _defrag () {
-        if (this->_numberSeq == NULL)
-            return;
-        
-        int i = this->_length;
-        int j = 0;
-
-        while (this->_length - i < this->_fractionDigits) {
-            if (this->_numberSeq[--i] == 0) {
-                this->_fractionDigits--;
-                this->_length--;
-            } else {
-                break;
-            }
-        }
-
-        while (j <= this->_length - this->_fractionDigits) {
-            if (this->_numberSeq[j] == 0) {
-                this->_length--;
-                j++;
-            } else {
-                break;
-            }
-        }
-
-        int* temp = new int[this->_length];
-        for (int k = j; k <= i; k++) {
-            temp[k - j] = this->_numberSeq[k];
-        }
-
-        delete this->_numberSeq;
-        this->_numberSeq = temp;
-    }
-
     char* _getNumber () {
-        char* temp = new char[this->_length + 1];
-        int i = 0;
+        int start = 0;
+        int end = this->_length - 1;
 
-        while (i < this->_length - this->_fractionDigits) {
-            temp[i] = this->_numberSeq[i] + '0';
-            i++;
-        }
-
-        if (i < this->_length - 1) {
-            temp[i++] = '.';
-            while (i < this->_length + 1) {
-                temp[i] = this->_numberSeq[i - 1] + '0';
-                i++;
+        if (this->_fractionDigits < this->_length) {
+            while (start < this->_length - this->_fractionDigits
+                   &&
+                   this->_numberSeq[start] == 0) {
+                start++;
             }
         }
+
+        if (this->_fractionDigits != 0) {
+            while (end >= this->_length - this->_fractionDigits
+                   &&
+                   this->_numberSeq[end] == 0) {
+                end--;
+            }
+        }
+
+        this->_fractionDigits -= this->_length - 1 - end;
+
+        char* temp = NULL;
+        int length = end - start + 1;
+        
+        //if it is a pure fraction
+        if (this->_fractionDigits == length) {
+            temp = new char[length + 2];
+            temp[0] = '.';
+            for (int i = 0; i < length; i++) {
+                temp[i + 1] = this->_numberSeq[i + start] + '0';
+            }
+            temp[length + 1] = '\0';
+            return temp;
+        }
+
+        //if it is an integer
+        if (this->_fractionDigits == 0) {
+            temp = new char[length + 1];
+            for (int i = 0; i < length; i++) {
+                temp[i] = this->_numberSeq[i + start] + '0';
+            }
+            temp[length] = '\0';
+            return temp;
+        }
+
+        temp = new char[length + 2];
+        int i;
+        for (i = 0; i < length - this->_fractionDigits; i++) {
+            temp[i] = this->_numberSeq[i + start] + '0';
+        }
+
+        temp[i] = '.';
+
+        for (; i < length; i++) {
+            temp[i + 1] = this->_numberSeq[i + start] + '0';
+        }
+
+        temp[i + 1] = '\0';
 
         return temp;
+            
     }
     
     int* _numberSeq;
@@ -152,7 +162,7 @@ BigFloat& operator * (BigFloat& left, BigFloat& right) {
     }
 
     result->_fractionDigits = left._fractionDigits + right._fractionDigits;
-    result->_defrag ();
+    //    result->_defrag ();
     return *result;
 }
 
@@ -173,13 +183,16 @@ BigFloat& pow (BigFloat& base, int exp) {
 }
 
 int main (int argc, char** argv) {
-    char* numberString = new char[6];
+    char* numberString = new char[7];
     int exp;
     BigFloat* base = NULL;
 
     while (cin >> numberString >> exp) {
-        
+        numberString[6] = '\0';
         base = new BigFloat(numberString);
+#ifdef _DEBUG_
+        cout << "base = " << numberString << "; " << "exp = " << exp << endl;
+#endif
         cout << pow (*base, exp) << endl;
         delete base;
     }
