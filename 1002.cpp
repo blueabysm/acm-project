@@ -3,14 +3,14 @@
 #include <map>
 using namespace std;
 
-void uniformString (string& str) {
-    for (string::iterator iter = str.begin (); iter < str.end (); iter++) {
-        if (*iter == '-')
-            str.erase (iter);
-    }
-    
-    for (string::iterator iter = str.begin (); iter < str.end (); iter++) {
+typedef map<string, int> Dictionary;
+
+void formatString (string& str) {
+    for (string::iterator iter = str.begin (); iter < str.end ();) {
         switch (*iter) {
+            case '-':
+                str.erase (iter);
+                continue;
             case 'A':
             case 'B':
             case 'C':
@@ -52,13 +52,14 @@ void uniformString (string& str) {
                 str.replace (iter, iter + 1, "9");
                 break;
             default:
-                str.replace (iter, iter + 1, "0");
+                break;
         }
+        iter++;
     }
 }
 
 int main (int argc, char** argv) {
-    map<string, int> telephones;
+    Dictionary telephones;
 
     int repeat;
     string telephone;
@@ -66,11 +67,29 @@ int main (int argc, char** argv) {
     cin >> repeat;
     while (repeat-- > 0) {
         cin >> telephone;
-        uniformString (telephone);
+        formatString (telephone);
         telephones[telephone]++;
+#ifdef _DEBUG_
+        cout << "_DEBUG_:" << telephone << " " << endl;
+#endif        
     }
 
+    bool noDup = true;
     
+    for (Dictionary::iterator iter = telephones.begin ();
+         iter != telephones.end ();
+         iter++) {
 
+        
+        if ((*iter).second > 1) {
+            string temp = (*iter).first;
+            cout << temp.insert (3, "-") << " " << (*iter).second << endl;
+            noDup = false;
+        }
+    }
+
+    if (noDup) {
+        cout << "No duplicates." << endl;
+    }
     return 0;
 }
