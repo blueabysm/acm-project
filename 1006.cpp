@@ -31,7 +31,7 @@ int main (int argc, char** argv) {
         caseNumber++;
         int i;
         i = max3 (physical, emotional, intellectual);
-        while ((i += P_CYCLE) <= MAX_TRIPLE + current) {
+        while ((i += P_CYCLE) <= MAX_TRIPLE) {
             //这段注释前后的代码，之所以这样安排顺序，目的是减少循环的次数
             if ((i - intellectual) % I_CYCLE == 0 &&
                 (i - emotional) % E_CYCLE == 0 &&
@@ -44,7 +44,9 @@ int main (int argc, char** argv) {
                 cout << "Case " << caseNumber << ": the next triple peak occurs in " << i << " days." << endl;
                 break;
             }
-#ifdef
+#ifdef _DEBUG_
+            cerr << i << endl;
+#endif            
         }
     }
     return 0;
