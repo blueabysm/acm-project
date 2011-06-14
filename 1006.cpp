@@ -31,6 +31,7 @@ int main (int argc, char** argv) {
         caseNumber++;
         int i;
         i = max3 (physical, emotional, intellectual);
+        //之前在while循环上加上了条件，这样是不对的，应该相信，该找到的数字总是会找到的。
         while (true) {
             if ((i - intellectual) % I_CYCLE == 0 &&
                 (i - emotional) % E_CYCLE == 0 &&
@@ -46,7 +47,7 @@ int main (int argc, char** argv) {
                 cout << "Case " << caseNumber << ": the next triple peak occurs in " << i << " days." << endl;
                 break;
             }
-            i++;
+            i += P_CYCLE;
         }
     }
     return 0;
