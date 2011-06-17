@@ -1,61 +1,66 @@
 #include <iostream>
 #include <string>
 #include <map>
+
+#define TEL_LENGTH 6
 using namespace std;
 
-typedef map<string, int> Dictionary;
+typedef map<char*, int> Dictionary;
 
-void formatString (string& str) {
-    for (string::iterator iter = str.begin (); iter < str.end ();) {
-        switch (*iter) {
-            case '-':
-                str.erase (iter);
-                continue;
-            case 'A':
-            case 'B':
-            case 'C':
-                str.replace (iter, iter + 1, "2");
-                break;
-            case 'D':
-            case 'E':
-            case 'F':
-                str.replace (iter, iter + 1, "3");
-                break;
-            case 'G':
-            case 'H':
-            case 'I':
-                str.replace (iter, iter + 1, "4");            
-                break;
-            case 'J':
-            case 'K':
-            case 'L':
-                str.replace (iter, iter + 1, "5");
-                break;
-            case 'M':
-            case 'N':
-            case 'O':
-                str.replace (iter, iter + 1, "6");
-                break;
-            case 'P':
-            case 'R':
-            case 'S':
-                str.replace (iter, iter + 1, "7");
-                break;
-            case 'T':
-            case 'U':
-            case 'V':
-                str.replace (iter, iter + 1, "8");
-                break;
-            case 'W':
-            case 'X':
-            case 'Y':
-                str.replace (iter, iter + 1, "9");
-                break;
-            default:
-                break;
+char* formatString (string& str) {
+    char* result = new[TEL_LENGTH + 1];
+    for (int i = 0, j = 0; i < TEL_LENGTH && j < str.size ();) {
+        switch (str[j]) {
+        case '-':
+            j++;
+            break;
+        case 'A':
+        case 'B':
+        case 'C':
+            result[i] = '2';
+            break;
+        case 'D':
+        case 'E':
+        case 'F':
+            result[i] = '3';
+            break;
+        case 'G':
+        case 'H':
+        case 'I':
+            result[i] = '4';
+            break;
+        case 'J':
+        case 'K':
+        case 'L':
+            result[i] = '5';
+            break;
+        case 'M':
+        case 'N':
+        case 'O':
+            result[i] = '6';
+            break;
+        case 'P':
+        case 'R':
+        case 'S':
+            result[i] = '7';
+            break;
+        case 'T':
+        case 'U':
+        case 'V':
+            result[i] = '8';
+            break;
+        case 'W':
+        case 'X':
+        case 'Y':
+            result[i] = '9';
+            break;
+        default:
+            break;
         }
-        iter++;
+        i++;
     }
+    result[TEL_LENGTH] = '\0';
+    return result;
 }
 
 int main (int argc, char** argv) {
@@ -64,11 +69,13 @@ int main (int argc, char** argv) {
     int repeat;
     string telephone;
 
+    char* temp;
+
     cin >> repeat;
     while (repeat-- > 0) {
         cin >> telephone;
-        formatString (telephone);
-        telephones[telephone]++;
+        temp = formatString (telephone);
+        telephones[temp]++;
 #ifdef _DEBUG_
         cout << "_DEBUG_:" << telephone << " " << endl;
 #endif        
